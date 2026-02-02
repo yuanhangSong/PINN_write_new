@@ -23,7 +23,7 @@
 培养单位	自动化学院
           
 
-2026年  2  月  6  日 
+2026年  2  月  7  日 
 
 填表说明
 1．只有学籍状态为注册或暂缓注册的研究生才允许开题。但学籍状态为暂缓注册的研究生只有在完成注册手续之后，开题报告及其评审结果才能被认可。
@@ -38,7 +38,7 @@
 简述该选题的研究意义、国内外研究概况和发展趋势。
 1.1研究意义
 随着低空经济的快速发展与无人系统技术的日益成熟，无人机（Unmanned Aerial Vehicle, UAV）的应用场景正从开阔空域逐渐向城市巷道、地下管廊、灾后废墟等复杂环境延伸。在这些执行特定任务的场景中，环境往往具有未知性和不规则性，充斥着诸如U形墙、死胡同、长走廊等非凸形状的障碍物，这构成了典型的非凸环境。在定位辅助缺失或机载算力有限的条件下，无人机能否自主规划出一条既能有效绕过各类几何陷阱、又具备安全保障的飞行轨迹，是实现全自主无人飞行作业的关键。
-然而，现有的运动规划技术在应对此类环境时仍面临诸多挑战。传统的采样规划方法在通过狭窄通道时，计算复杂度往往呈指数级增长，难以满足无人机高度、高动态飞行的实时性要求；而经典的人工势场法虽然计算高效，但在U形障碍物内部容易因引力与斥力的平衡而产生局部极小值，导致无人机在距离目标很近的位置陷入停滞。
+然而，现有的运动规划技术在应对此类环境时仍面临诸多挑战。传统的采样规划方法在通过狭窄通道时，计算复杂度往往呈指数级增长，难以满足无人机高动态飞行的实时性要求；而经典的人工势场法虽然计算高效，但在U形障碍物内部容易因引力与斥力的平衡而产生局部极小值，导致无人机在距离目标很近的位置陷入停滞。
 近年来，人工智能技术为解决上述问题提供了新的思路。基于深度学习的运动规划展现了良好的实时推理能力，但目前主流的方法多依赖于专家演示数据，数据采集与标注成本较高，且模型在面对训练集中未曾出现的异复杂形状障碍物时，泛化能力与鲁棒性存在不足。为了降低对数据的依赖，基于物理信息神经网络（Physics-Informed Neural Networks, PINN）的方法开始受到关注。该类方法试图通过求解波传播方程（如Eikonal方程）来生成导航势场，其核心优势在于：一方面，训练过程仅需环境的几何信息作为输入，无需采集大量专家轨迹数据，显著降低了数据获取成本；另一方面，物理方程作为自监督信号内嵌于损失函数中，使得网络能够学习到符合物理规律的连续时间场表示；此外，训练完成后的神经网络可实现毫秒级的实时推理，相比传统数值方法具有明显的计算效率优势。
 尽管如此，目前的物理信息规划方法在处理复杂非凸环境时仍有待完善。由于物理方程在障碍物边缘存在梯度的不连续性，单纯依靠物理方程残差作为训练信号，神经网络容易在U形墙、死胡同等非凸陷阱结构中收敛到错误的局部极小值，导致规划路径陷入死锁。此外，神经网络作为函数近似器，在障碍物边界处不可避免地存在拟合误差，这可能导致生成的轨迹与障碍物发生碰撞，缺乏严格的安全性保障。
 因此，本选题开展“非凸环境下基于物理信息神经网络的无人机安全运动规划”研究，旨在探索一种无需大量专家数据驱动、能通过自监督学习适应复杂环境，并融合控制障碍函数（Control Barrier Functions,CBF）实现安全约束的规划框架。在理论上，该研究尝试解决神经场方法在复杂拓扑结构下的收敛性与安全性问题，在工程上，期望提升无人机在极端环境下的自主性、生存能力与任务效率，具有一定的学术价值与应用前景。
@@ -69,7 +69,7 @@
 控制障碍函数的理论基础源于集合不变性理论。Ames等人[42]系统梳理了CBF的理论框架及其应用，被视为该领域的开山之作。CBF的核心思想是定义一个标量函数，使得安全集合可表示为该函数的零上水平集。通过要求系统状态的演化满足特定的微分不等式约束，可以保证系统状态始终保持在安全集合内部，从而实现前向不变性。在实际应用中，CBF约束通常与控制李雅普诺夫函数（Control Lyapunov Function, CLF）结合，通过求解二次规划（Quadratic Programming, QP）问题来获得同时满足稳定性和安全性要求的控制输入。Li等人[43]进一步梳理了CLF和CBF在非线性仿射控制系统中的应用，总结了基于QP优化的控制器设计方法。Bansal等人[44]从Hamilton-Jacobi可达性分析的角度研究了安全验证问题，为CBF方法提供了互补的理论视角。
 随着深度学习技术的发展，研究人员开始探索利用神经网络学习控制障碍函数。Dawson等人[45]发表于机器人顶刊TRO的综述论文全面总结了神经李雅普诺夫函数、神经障碍函数和神经收缩度量在机器人控制中的应用，指出神经网络为处理复杂非线性系统提供了有效的函数逼近工具。So等人[46]提出的神经控制障碍函数的方法研究了如何针对具有复杂输入约束的系统构建和训练神经CBF，为安全滤波器的学习提供了实用的技术方案。此外，针对存在外部扰动的场景，基于学习型CBF的无人机安全目标跟踪方法[47]展示了神经CBF在实际系统中的应用潜力。Taylor等人[48]研究了基于学习的CBF方法在模型不确定性下的鲁棒性问题，为实际应用中的安全保障提供了理论分析。
 在将CBF与运动规划相结合方面，学术界也进行了一些探索。Yang等人[49]提出的LQR-CBF-RRT方法将CBF嵌入RRT算法框架，通过在局部控制层引入CBF约束来修正采样轨迹，验证了将安全机制与采样规划相结合的有效性。Singletary等人[50]研究了将CBF应用于运动学层面的安全控制，提出了融合动能项的能量控制障碍函数设计方法，为连接上层规划与底层控制提供了理论支撑。在动态环境下，动态CBF方法[51]被提出用于处理动态障碍物的避碰问题。Thirugnanam等人[52]将CBF与模型预测控制相结合，实现了多面体障碍物环境下的安全导航。Mestres等人的工作[53]将CLF、CBF与RRT相结合，提出了同时满足安全性和动力学可行性的C-CLF-CBF-RRT运动规划框架，针对具有多面体和椭球约束的线性系统实现了概率完备性保证。Herbert等人[54]提出了FaSTrack框架，通过预计算可达集实现了快速安全跟踪，为规划与安全控制的结合提供了另一种范式。基于采样的CBF运动规划方法[55]对RRT和RRT*进行了安全增强，进一步验证了CBF在采样规划中的有效性。
-尽管CBF理论在安全控制领域取得了丰富的研究成果，但目前的应用场景多集中于底层控制器或后端安全滤波器的设计。在与前端规划算法的结合方面，现有工作大多采用级联式架构：先由规划器生成参考轨迹，再由CBF控制器在执行阶段进行安全修正。这种分离式设计可能导致两个问题：其一，规划器生成的轨迹若本身存在缺陷，后端的CBF滤波器可能需要进行较大幅度的修正，影响执行效率；其二，当CBF约束与规划目标存在冲突时（例如在陷阱环境中），系统可能陷入僵局——CBF约束阻止机器人靠近障碍物，而规划梯度又指向陷阱内部，导致机器人无法有效规避。
+尽管CBF理论在安全控制领域取得了丰富的研究成果，但目前的应用场景多集中于底层控制器或后端安全滤波器的设计。在与前端规划算法的结合方面，现有工作大多采用级联式架构：先由规划器生成参考轨迹，再由CBF控制器在执行阶段进行安全修正。这种分离式设计可能导致两个问题：其一，规划器生成的轨迹若本身存在缺陷，后端的CBF滤波器可能需要进行较大幅度的修正，影响执行效率；其二，当CBF约束与规划目标存在冲突时（例如在陷阱环境中），系统可能陷入僵局——CBF约束阻止机器人靠近障碍物，而规划梯度又指向陷阱内部，导致机器人无法有效逃逸。
 特别值得注意的是，如何将CBF的安全约束机制与物理信息神经网络的训练过程深度融合，目前尚缺乏系统性的研究。现有的神经规划方法主要关注路径的效率和平滑性，对安全性的考虑相对薄弱；而CBF相关研究则侧重于控制层面的安全保障，较少涉及规划层面的优化。将两者有机结合，在规划阶段就将安全约束内嵌于神经网络的损失函数中，有望在保持规划效率的同时提供更可靠的安全保障，这是一个值得深入探索的研究方向。
 1.3发展趋势
 综合国内外相关研究，无人机在复杂环境下的运动规划技术正呈现以下发展趋势：
@@ -97,20 +97,20 @@
 [14]Ichter B, Harrison J, Pavone M. Learning sampling distributions for robot motion planning[C]//2018 IEEE International Conference on Robotics and Automation (ICRA). IEEE, 2018: 7087-7094.
 [15]Bency M J, Qureshi A H, Yip M C. Neural path planning: Fixed time, near-optimal path generation via oracle imitation[C]//2019 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS). IEEE, 2019: 3965-3972.
 [16]Zang X, Yin M, Xiao J, et al. Graphmp: Graph neural network-based motion planning with efficient graph search[J]. Advances in Neural Information Processing Systems, 2023, 36: 3131-3142.
-[17]Han Z, Xu L, Pei L, et al. Learning to plan maneuverable and agile flight trajectory with optimization embedded networks[J]. arXiv preprint arXiv:2405.07736, 2024.
+[17]Han Z, Xu L, Pei L, et al. Learning to plan maneuverable and agile flight trajectory with optimization embedded networks[J]. arXiv preprint arXiv:2405.07736, 2024.DOI：10.48550/arXiv.2405.07736
 [18]Tamar A, Wu Y, Thomas G, et al. Value iteration networks[J]. Advances in neural information processing systems, 2016, 29.
 [19]Gu S, Holly E, Lillicrap T, et al. Deep reinforcement learning for robotic manipulation with asynchronous off-policy updates[C]//2017 IEEE international conference on robotics and automation (ICRA). IEEE, 2017: 3389-3396.
-[20]Liang Q, Que F, Modiano E. Accelerated primal-dual policy optimization for safe reinforcement learning[J]. arXiv preprint arXiv:1802.06480, 2018.
+[20]Liang Q, Que F, Modiano E. Accelerated primal-dual policy optimization for safe reinforcement learning[J]. arXiv preprint arXiv:1802.06480, 2018.DOI: 10.48550/arXiv.1802.06480.
 [21]Karniadakis G E, Kevrekidis I G, Lu L, et al. Physics-informed machine learning[J]. Nature Reviews Physics, 2021, 3(6): 422-440.
 [22]Smith J D, Azizzadenesheli K, Ross Z E. Eikonet: Solving the eikonal equation with deep neural networks[J]. IEEE Transactions on Geoscience and Remote Sensing, 2020, 59(12): 10685-10696.
-[23]Ni R, Qureshi A H. Ntfields: Neural time fields for physics-informed robot motion planning[J]. arXiv preprint arXiv:2210.00120, 2022.
+[23]Ni, Ruiqi, and Ahmed H. Qureshi. "Ntfields: Neural time fields for physics-informed robot motion planning." arXiv preprint arXiv:2210.00120 (2022).DOI:10.48550/arXiv.2210.00120
 [24]Huh J, Isler V, Lee D D. Cost-to-go function generating networks for high dimensional motion planning[C]//2021 IEEE International Conference on Robotics and Automation (ICRA). IEEE, 2021: 8480-8486.
-[25]Li X, De Mello S, Wang X, et al. Learning continuous environment fields via implicit functions[J]. arXiv preprint arXiv:2111.13997, 2021.
-[26]Ni R, Qureshi A H. Progressive learning for physics-informed neural motion planning[J]. arXiv preprint arXiv:2306.00616, 2023.
-[27]Liu Y, Buynitsky A, Ni R, et al. Physics-informed neural motion planning via domain decomposition in large environments[J]. arXiv preprint arXiv:2506.12742, 2025.
+[25]Li X, De Mello S, Wang X, et al. Learning continuous environment fields via implicit functions[J]. arXiv preprint arXiv:2111.13997, 2021.DOI:10.48550/arXiv.2111.13997.DOI:10.48550/arXiv.2111.13997
+[26]Ni R, Qureshi A H. Progressive learning for physics-informed neural motion planning[J]. arXiv preprint arXiv:2306.00616, 2023.DOI:10.48550/arXiv.2306.00616DOI:10.48550/arXiv.2306.00616
+[27]Liu Y, Buynitsky A, Ni R, et al. Physics-informed neural motion planning via domain decomposition in large environments[J]. arXiv preprint arXiv:2506.12742, 2025.DOI:10.48550/arXiv.2506.12742
 [28]Liu Y, Ni R, Qureshi A H. Physics-informed neural mapping and motion planning in unknown environments[J]. IEEE Transactions on Robotics, 2025.
 [29]Ni R, Qureshi A H. Physics-informed neural motion planning on constraint manifolds[C]//2024 IEEE International Conference on Robotics and Automation (ICRA). IEEE, 2024: 12179-12185.
-[30]Zhai Y, Reiter R, Scaramuzza D. Pa-mppi: Perception-aware model predictive path integral control for quadrotor navigation in unknown environments[J]. arXiv preprint arXiv:2509.14978, 2025.
+[30]Zhai Y, Reiter R, Scaramuzza D. Pa-mppi: Perception-aware model predictive path integral control for quadrotor navigation in unknown environments[J]. arXiv preprint arXiv:2509.14978, 2025.DOI:10.48550/arXiv.2509.14978
 [31]Chen T, Culbertson P, Schwager M. Catnips: Collision avoidance through neural implicit probabilistic scenes[J]. IEEE Transactions on Robotics, 2024, 40: 2712-2728.
 [32]Krishnapriyan A, Gholami A, Zhe S, et al. Characterizing possible failure modes in physics-informed neural networks[J]. Advances in neural information processing systems, 2021, 34: 26548-26560.
 [33]Wagner J, Herberg E, Herzog R. Experiences with Physics-Informed Neural Networks for Optimal Control Problems[J]. GAMM Archive for Students, 2025, 7(1): 31-45.
@@ -120,8 +120,8 @@
 [37]Mustajab A H, Lyu H, Rizvi Z, et al. Physics-informed neural networks for high-frequency and multi-scale problems using transfer learning[J]. Applied Sciences, 2024, 14(8): 3204.
 [38]Wei C, Fan Y, Wong J C, et al. FFV-PINN: A fast physics-informed neural network with simplified finite volume discretization and residual correction[J]. Computer Methods in Applied Mechanics and Engineering, 2025, 444: 118139.
 [39]Raissi M, Perdikaris P, Karniadakis G E. Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations[J]. Journal of Computational physics, 2019, 378: 686-707.
-[40]García-Castellanos A, Wessels D R, Berg N J, et al. Equivariant eikonal neural networks: grid-free, scalable travel-time prediction on homogeneous spaces[J]. arXiv preprint arXiv:2505.16035, 2025.
-[41]Ni R, Pan Z, Qureshi A H. Physics-informed temporal difference metric learning for robot motion planning[J]. arXiv preprint arXiv:2505.05691, 2025.
+[40]García-Castellanos A, Wessels D R, Berg N J, et al. Equivariant eikonal neural networks: grid-free, scalable travel-time prediction on homogeneous spaces[J]. arXiv preprint arXiv:2505.16035, 2025.DOI:10.48550/arXiv.2505.16035
+[41]Ni R, Pan Z, Qureshi A H. Physics-informed temporal difference metric learning for robot motion planning[J]. arXiv preprint arXiv:2505.05691, 2025.DOI:10.48550/arXiv.2505.05691
 [42]Ames A D, Coogan S, Egerstedt M, et al. Control barrier functions: Theory and applications[C]//2019 18th European control conference (ECC). IEEE, 2019: 3420-3431.
 [43]Li B, Wen S, Yan Z, et al. A survey on the control lyapunov function and control barrier function for nonlinear-affine control systems[J]. IEEE/CAA Journal of Automatica Sinica, 2023, 10(3): 584-602.
 [44]Bansal S, Chen M, Herbert S, et al. Hamilton-jacobi reachability: A brief overview and recent advances[C]//2017 IEEE 56th Annual Conference on Decision and Control (CDC). IEEE, 2017: 2242-2253.
@@ -131,7 +131,7 @@
 [48]Taylor A, Singletary A, Yue Y, et al. Learning for safety-critical control with control barrier functions[C]//Learning for dynamics and control. PMLR, 2020: 708-717.
 [49]Yang G, Cai M, Ahmad A, et al. LQR-CBF-RRT*: Safe and optimal motion planning[C]//2025 American Control Conference (ACC). IEEE, 2025: 3700-3705.
 [50]Singletary A, Kolathaya S, Ames A D. Safety-critical kinematic control of robotic systems[J]. IEEE Control Systems Letters, 2021, 6: 139-144.
-[51]Jian Z, Yan Z, Lei X, et al. Dynamic control barrier function-based model predictive control to safety-critical obstacle-avoidance of mobile robot[J]. arXiv preprint arXiv:2209.08539, 2022.
+[51]Jian Z, Yan Z, Lei X, et al. Dynamic control barrier function-based model predictive control to safety-critical obstacle-avoidance of mobile robot[J]. arXiv preprint arXiv:2209.08539, 2022.DOI:10.48550/arXiv.2209.08539
 [52]Thirugnanam A, Zeng J, Sreenath K. Safety-critical control and planning for obstacle avoidance between polytopes with control barrier functions[C]//2022 International Conference on Robotics and Automation (ICRA). IEEE, 2022: 286-292.
 [53]Mestres P, Nieto-Granda C, Cortés J. Safe and dynamically feasible motion planning using control lyapunov and barrier functions[J]. IEEE Transactions on Robotics, 2025, 41: 6440-6459.
 [54]Herbert S L, Chen M, Han S J, et al. FaSTrack: A modular framework for fast and guaranteed safe motion planning[C]//2017 IEEE 56th Annual Conference on Decision and Control (CDC). IEEE, 2017: 1517-1522.
@@ -161,6 +161,16 @@
 研究将通过对比实验，分析本方法与传统数值方法（如FMM）、经典采样算法（如RRT*）以及无约束基线PINN方法在规划成功率、路径长度、计算时间及碰撞情况等指标上的差异。特别是将重点验证在深陷阱场景下，本方法在处理局部极小值问题上的表现，以及在贴近障碍物飞行时的安全性能，从而验证上述方法的工程可行性。
 2.3 各部分研究内容之间的关系
 上述四部分研究内容相互支撑，逐步深入。 研究内容一作为基础，构建了基于PDE的规划框架，旨在解决计算效率问题，为后续研究提供模型基础。 研究内容二针对基础框架在非凸区域的不足，通过引入几何约束改善梯度分布，旨在解决路径的可行性问题。 研究内容三则是针对模型拟合误差带来的安全风险，通过结合CBF与采样策略，旨在解决规划的安全性问题。 最后由研究内容四进行验证，通过仿真实验对上述方法进行综合评估。
+总体的逻辑框图见图1。
+
+图 1
+
+
+
+
+
+
+
 
 
 
@@ -173,27 +183,35 @@
 2.几何修正层：针对物理方程在U形墙等非凸区域可能产生的梯度奇异性，引入流线几何约束方法。通过分析波传播的几何特性，设计流线单调性与最优性约束，强制修正神经场在陷阱内部的梯度方向，从几何层面消除虚假平衡点。
 3.安全保障层：针对神经网络拟合误差带来的碰撞隐患，引入CBF理论。采用拉格朗日乘子法思想，将安全微分不等式转化为可微的损失函数项，配合非均匀的主动采样策略，实现对障碍物边界的精确排斥与安全绕行。
 3.2 技术路线
-本课题的技术路线遵循“环境建模—神经场构建—多重约束优化—在线规划”的逻辑流程：
-1.环境表征与预处理：利用符号距离场（SDF）算法对Gibson及自建Wilds非凸环境进行离线处理，计算空间中任意位置的障碍物距离及其梯度，并结合CBF理论构建“安全速度场”，为后续物理方程求解提供蕴含安全约束的真值输入。
-2.物理场构建与网络训练：构建基于残差连接的深度神经网络，用于拟合空间中的到达时间场。通过最小化Eikonal偏微分方程残差，驱动网络在无监督条件下学习波在复杂介质中的传播规律。
-3.多重约束协同优化：针对物理方程求解的奇异性，引入流线几何约束修正局部极小值；针对拟合误差，引入基于拉格朗日的CBF安全约束。通过构造包含物理项、几何项与安全项的复合损失函数，利用梯度下降法对网络参数进行迭代优化。
-4.在线规划与推理：利用训练好的神经场实时计算梯度流，结合主动采样策略生成的局部修正项，生成能够顺滑绕过U形陷阱并直达目标点的安全轨迹。
+本课题的技术路线与四部分研究内容严格对应，遵循"基础框架构建—几何约束修正—安全机制增强—仿真验证评估"的递进式逻辑流程。
+1.基于物理信息神经网络的规划框架构建
+首先，利用符号距离场（Signed Distance Field, SDF）算法对目标环境进行离线预处理，计算空间中任意位置到最近障碍物的距离及其梯度，形成神经网络可查询的环境隐式表示。其次，构建基于残差连接的深度神经网络作为Eikonal方程求解器，采用Softplus激活函数保证梯度计算的数值稳定性。网络以空间坐标为输入，输出对应位置的到达时间场值。训练过程以Eikonal方程残差作为主要损失项，实现无需专家数据的自监督学习。为缓解复杂环境下的训练收敛困难，采用渐进式课程学习策略：初期在无障碍理想环境中学习直线波传播规律，中期引入简单凸障碍物，后期逐步过渡到包含U形墙、迷宫等复杂非凸结构的目标环境。
+2.基于几何特性的约束修正机制设计
+针对基础框架在非凸区域暴露出的局部极小值问题，设计两项几何约束作为辅助损失项加入训练过程。第一项为流线单调性约束：根据波传播原理，沿最优路径从起点向终点移动时，剩余时间应严格单调递减；通过在路径上采样中间点，构造惩罚项消除违反单调性的伪平衡点，防止轨迹在非凸区域内盘旋。第二项为三角不等式最优性约束：基于度量空间的三角不等式性质，直达的时间代价不应超过经由任意中间点迂回的代价之和；通过惩罚违反该性质的情况，引导梯度流更直接地指向非凸区域出口。上述约束与物理方程残差共同构成多目标损失函数，采用自适应权重调整策略平衡各项贡献。
+3.融合控制障碍函数的安全增强策略实现
+针对神经网络拟合误差带来的碰撞隐患，从内在约束与外在约束两个维度引入控制障碍函数实现安全增强。在内在约束层面，改变Eikonal方程中速度场的定义方式，将障碍物距离函数直接映射为物理方程的允许速度上限，使神经网络在靠近障碍物时自动降低传播速度，从方程本身抑制穿墙风险。在外在约束层面，将CBF微分不等式转化为对时间场梯度方向的约束条件，采用拉格朗日乘子法构造惩罚项，强制规划方向在障碍物边界保持切向或远离状态。此外，设计基于距离场梯度的非均匀主动采样策略，在梯度变化剧烈的障碍物边缘进行加密采样，在空旷区域稀疏采样，确保计算资源集中于安全关键区域。
+4.多场景仿真实验平台搭建与性能验证
+搭建包含多种典型非凸结构的三维仿真测试环境，包括Gibson高保真室内环境、C3D建筑环境及自建Wilds野外环境，涵盖U形墙、长走廊、迷宫及杂乱障碍群等场景。设计对比实验方案，将本课题提出的方法与传统数值方法、经典采样算法以及无约束基线PINN方法进行系统比较。评估指标包括规划成功率、路径长度、计算时间及安全裕度等。通过消融实验分析各约束模块的独立贡献，验证几何约束与安全约束的有效性。根据实验反馈对模型参数与约束权重进行迭代优化。
 3.3 实验方案
 3.3.1 数学建模与问题描述
 为了聚焦规划机理，将无人机简化为三维质点模型，其状态方程为：
 
-其中， 表示位置向量，为速度控制输入。工作空间 包含障碍物区域 和自由区域  。本研究重点关注复杂非凸环境，即存在连接两点的线段无法完全包含在自由区域内，且势场梯度存在局部极小点的复杂几何区域。
+其中， 表示位置向量，为速度控制输入。工作空间 包含障碍物区域 和自由区域  。本研究重点关注复杂非凸环境，即存在连接两点的线段无法完全包含在自由区域内，且势场梯度存在局部极小点的复杂几何区域（如图2所示）。
+
+图 2
 拟利用到达时间场 作为全局导航函数。在各向同性介质中，波前到达时间场满足非线性Eikonal方程：
 
 边界条件为 。其中，为环境允许的最大速度场。该方程的物理含义是时间场梯度的模长与当地最大速度成反比。
 3.3.2 基于物理信息神经场的快速构建
 为了求解上述方程，拟设计一种高效的神经网络求解器。
-1.网络架构设计：拟构建一个结合了残差连接（Residual Connection）的全连接神经网络。残差结构的设计有助于缓解深层网络中的梯度消失问题，使模型能够更敏锐地捕捉到时间场在障碍物附近的非线性变化。在激活函数的选择上，拟选用具备高阶导数连续性的平滑函数 Softplus：
+1.网络架构设计：我们参考如图3所示的传统神经网络规划结构，拟构建一个结合了残差连接（Residual Connection）的全连接神经网络。残差结构的设计有助于缓解深层网络中的梯度消失问题，使模型能够更敏锐地捕捉到时间场在障碍物附近的非线性变化。在激活函数的选择上，拟选用具备高阶导数连续性的平滑函数 Softplus：
 
 相比于传统的ReLU函数，Softplus 能够保证在反向传播计算物理梯度 时数值稳定，避免在零点不可导带来的震荡问题。
 2.渐进式训练策略：为了解决复杂环境下的训练收敛难题，拟采用由简入繁的课程学习策略。初期在无障碍的理想环境中训练网络学习直线波场，随后逐步引入障碍物约束，使隐式速度场逐步逼近真实的非凸分布，引导网络平稳过渡到复杂场景的求解。
+
+图 3
 3.3.3 非凸环境下的几何约束机制 
-针对Eikonal方程在U形陷阱内部可能产生的多解性与伪平衡点，拟引入两项几何约束以修正流线形态。
+针对Eikonal方程在U形陷阱内部可能产生的多解性与伪平衡点，有时陷入类似图2的局部最小值，拟引入两项几何约束以修正流线形态。
 1.流线单调性约束 根据波传播原理，沿最优路径从起点 向终点  移动时，剩余时间应严格单调递减。对于路径上的任意中间点 ，其时间代价应满足：
 
 
@@ -201,13 +219,21 @@
 为了在训练中强制满足该性质，构造如下单调性损失函数 ：
 
 该约束通过惩罚违反单调性的区域，消除导致轨迹在陷阱内盘旋的局部极小值。
-2.三角不等式最优约束基于度量空间的三角不等式特性，直达的时间代价不应超过经过任意中间点迂回的代价之和。即对于任意三点 ,,，应满足：
+3.三角不等式最优约束基于度量空间的三角不等式特性，直达的时间代价不应超过经过任意中间点迂回的代价之和。即对于任意三点 ,,，应满足：
 
 拟构造相应的最优性损失函数：
 
 这一约束从几何上限制了流线的曲率，防止网络生成绕远路的冗余路径，引导梯度流更直接地指向陷阱出口。
 3.3.4 融合CBF与主动采样的安全增强策略
-针对神经网络拟合误差可能导致的穿墙问题，拟从真值定义和损失约束两个维度引入CBF，实现双重安全增强。
+为保证系统在存在障碍物与状态约束的环境中始终满足安全可行性，本节引入 CBF作为安全约束的理论工具。CBF的核心思想是定义一个标量安全函数 ，使得安全区域对应于该函数的正值区域。如图4所示，通过约束系统状态的演化满足如下微分不等式：
+，其中
+可以保证当系统状态从安全区域内部出发时，安全函数的值始终保持非负，即系统状态不会越过安全边界进入危险区域。该约束的几何含义是：即使安全函数趋于下降，其下降速率也被限制在可控范围内，从而实现安全集合的前向不变性。在本研究中，安全函数可自然地定义为查询点到最近障碍物的距离，正值表示处于自由空间，零值表示位于障碍物边界。
+
+图 4
+上述约束条件的几何意义可通过图5直观理解。图中倒扣的碗状曲面表示安全函数在状态空间中的零水平集，即安全区域的边界。碗内部对应的安全区域，碗外部对应的危险区域。橙色曲线表示系统在控制作用下的状态轨迹。CBF约束的核心要求是：对于边界上的任意状态，必须存在一个容许控制输入，使得状态变化率，即轨迹在边界处的"速度方向"指向碗内或沿边界切向，而非穿透边界向外。这一条件确保了一旦系统状态进入安全区域内部，在满足CBF约束的控制律作用下，轨迹将始终被"困"在碗内，无法逃逸至危险区域，从而实现安全集合的前向不变性。
+
+图 5
+在本研究中，安全函数可自然地定义为查询点到最近障碍物的距离，正值表示处于自由空间，零值表示位于障碍物边界。基于上述CBF理论框架，本研究拟从真值定义和损失约束两个维度实现双重安全增强。
 1.基于CBF的安全速度场定义（内在约束） 为了从物理根源上降低碰撞风险，拟改变Eikonal方程中速度场 的定义。结合CBF理论中的安全边界条件，构建安全速度真值：
 
 该定义将障碍物距离直接映射为物理方程的允许速度上限。当无人机靠近障碍物时，方程本身要求的传播速度趋于零，从而迫使梯度的模长趋于无穷大，形成天然的高势能壁垒，从物理层面抑制碰撞趋势。
@@ -232,6 +258,7 @@
 
 
 
+
 四 研究工作进度安排
 理论研究：应包括文献调研，理论推导，数值计算，理论分析，撰写论文等；实验研究和工程技术研究：应包括文献调研，理论分析，实验设计，仪器设备的研制和调试，实验操作，实验数据的分析处理，撰写论文等。
 
@@ -248,25 +275,37 @@
 论文撰写与答辩准备。 整理实验与理论推导过程，梳理核心创新点。最后完成硕士学位论文的撰写、查重与修改，准备学位论文答辩PPT及相关展示材料。
 
 
-
 五 预期研究成果
 详细说明预期研究取得的成果，包括但不限于新理论、新方法、新技术以及新装置、新方案等,以及预期发表的论文、申请的专利、参加的学术会议等。
 通过本课题的研究，预期在算法模型、学术产出及系统平台方面取得以下成果：
 1.技术成果：提出一种复杂非凸环境下基于物理信息神经网络的无人机安全规划方法。该方法能够在无专家数据驱动的条件下，有效解决局部极小值死锁问题；实现规划算法的实时推理，满足无人机在线避障的时效性要求，提升规划安全性。
-2.理论产出：在国内外相关领域的期刊或会议上发表学术论文1篇且申请发明专利1项。
+2.理论产出：在国内外相关领域的期刊或会议上发表学术论文1篇，申请发明专利1项。
 
 
 六 本课题创新之处
 论证说明研究内容、拟采用的研究方法、技术路线或预期成果中有哪些创新之处。
 本课题的创新之处主要体现在以下三个方面：
 1.设计了渐进式物理场自监督学习策略。为了解决深度神经网络在复杂非结构化环境中直接求解偏微分方程面临的收敛困难问题，本研究设计了一套渐进式课程学习框架。通过动态调整环境速度场的复杂度与约束强弱，引导网络先学习理想条件下的波传播规律，再逐步逼近真实的非凸环境场分布。这种训练范式不仅大幅缩短了网络收敛时间，还显著提升了训练效果。
-2.提出了复杂非凸环境下基于几何约束的修正方法。针对现有物理信息神经网络在求解Eikonal方程时，易在U形墙等非凸区域产生梯度奇异性从而导致“局部极小值死锁”的难题，引入了流线几何约束机制。不同于传统方法仅依赖物理方程残差进行训练，本研究拟构建基于流线单调性与三角不等式的辅助损失函数。这种方法能够在不依赖专家演示数据的前提下，从几何拓扑层面强制修正神经场在陷阱内部的梯度指向，有效解决了物理方程在复杂边界条件下的多解性问题，提升了规划算法在深陷阱场景下的规避成功率。
+2.提出了复杂非凸环境下基于几何约束的修正方法。针对现有物理信息神经网络在求解Eikonal方程时，易在U形墙等非凸区域产生梯度奇异性从而导致“局部极小值死锁”的难题，引入了流线几何约束机制。不同于传统方法仅依赖物理方程残差进行训练，本研究拟构建基于流线单调性与三角不等式的辅助损失函数。这种方法能够在不依赖专家演示数据的前提下，从几何拓扑层面强制修正神经场在陷阱内部的梯度指向，有效解决了物理方程在复杂边界条件下的多解性问题，提升了规划算法在深陷阱场景下的逃逸成功率。
 3.构建了融合控制障碍函数与主动采样的安全增强规划框架。针对神经运动规划器作为函数近似器在障碍物边界处难免产生拟合误差，进而导致穿墙问题，本研究提出了一种内嵌式安全约束策略。和传统先规划、后滤波的分离式架构不同，该研究将控制障碍函数的安全微分不等式转化为基于拉格朗日的损失函数项，直接嵌入神经网络的训练回路中。同时，配合基于距离场梯度的非均匀主动采样策略，在规划层面实现了从概率无碰撞到理论安全约束的跨越。
+
+
+
+
+
+
+
+
+
+
+
+
+
 七 研究基础
 1.与本项目有关的研究工作积累和已取得的研究工作成绩。
-（1）文献积累：已对物理信息神经网络、Eikonal方程数值求解、控制障碍函数（CBF）及传统采样规划算法（RRT*、FMM）进行了广泛的文献调研，梳理了相关领域的发展脉络与技术瓶颈，完成了不少于50篇核心文献的阅读与综述撰写。
+（1）文献积累：已对物理信息神经网络、Eikonal方程数值求解、CBF及传统采样规划算法（RRT*、FMM）进行了广泛的文献调研，梳理了相关领域的发展脉络与技术瓶颈，完成了不少于50篇核心文献的阅读与综述撰写。
 （2）算法复现与验证：笔者已基于PyTorch深度学习框架，成功复现了基础的神经场规划算法，实现了从状态空间到到达时间场的神经网络映射，并掌握了基于自动微分的梯度提取技术。初步实验验证了物理方程驱动规划的可行性，为后续引入几何与安全约束提供了可靠的基线模型。 
-（3）环境构建：已利用Gibson（真实室内扫描数据）和blender工具搭建了包含U形墙、迷宫、杂乱障碍群等多种典型非凸结构的三维仿真测试平台，并完成了SDF预处理模块的开发，能够为算法训练提供精确的环境真值信息。
+（3）环境构建：已利用Gibson（真实室内扫描数据）和Blender工具搭建了包含U形墙、迷宫、杂乱障碍群等多种典型非凸结构的三维仿真测试平台，并完成了SDF预处理模块的开发，能够为算法训练提供精确的环境真值信息。
 
 2.已具备的实验条件，尚缺少的实验条件和解决的途径（包括利用国家重点实验室和部门开放实验室的计划与落实情况）。
 已具备的实验条件：硬件方面实验室配备了多台高性能深度学习工作站（搭载NVIDIA RTX 4090显卡），能够满足本课题中大规模神经网络训练与物理场高分辨率解算的算力需求。 软件环境包括已部署完善的Ubuntu 操作系统、Anaconda环境及PyTorch等主流深度学习框架，具备完整的代码开发与调试环境。 
@@ -282,4 +321,6 @@
 用，1000 元/人次，拟邀请 3 人 
 次，共 3000 元。	3000
 	总共	11500
+
+
 
